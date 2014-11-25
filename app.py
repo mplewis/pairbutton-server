@@ -28,4 +28,4 @@ def register_extensions(app):
 
 
 if __name__ == '__main__':
-    print('Start the server with server.py, not app.py.')
+    print('Start the Pairbutton server with server.py, not app.py.')
