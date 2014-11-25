@@ -22,7 +22,7 @@ class ChannelsEndpoint(Resource):
 
 class ChannelEndpoint(Resource):
     def get(self, channel_id):
-        channel = Channel.query.filter_by(id=channel_id).first()
+        channel = channel_with_id(channel_id)
         check_auth(AUTH_KEY, channel.key)
         return jsonify(serialize_sqla(channel))
 
