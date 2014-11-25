@@ -62,9 +62,3 @@ def serialize_sqla(sqla):
     for column in sqla.__table__.columns:
         d[column.name] = str(getattr(sqla, column.name))
     return d
-
-
-# https://gist.github.com/theY4Kman/3893296
-def hmac_sha256(key, data):
-    hash_obj = HMAC.new(key, data, SHA256)
-    return hash_obj.hexdigest()

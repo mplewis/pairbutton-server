@@ -1,11 +1,10 @@
 from app import db
 from models import Channel, File
-from parsers import (AUTH_KEY, AUTH_SIGN, authorized, createFileParser,
-                     updateFileParser)
+from parsers import AUTH_KEY, authorized, createFileParser, updateFileParser
 from helpers import (pretty_ident, crypto_key_hex, serialize_sqla, make_error,
-                     channel_with_id, file_with_id, hmac_sha256)
+                     channel_with_id, file_with_id)
 
-from flask import jsonify, request
+from flask import jsonify
 from flask.ext.restful import Resource
 
 
@@ -42,8 +41,7 @@ class ChannelFilesEndpoint(Resource):
         if error:
             return error
 
-        expected = hmac_sha256(channel.key.encode(), request.data)
-        if not authorized(AUTH_SIGN, expected):
+        if not authorized(AUTH_KEY, channel.key):
             return make_error('Unauthorized', 403)
 
         file_data = createFileParser.parse_args()
@@ -60,9 +58,7 @@ class ChannelFileEndpoint(Resource):
         if error:
             return error
 
-        expected = hmac_sha256(channel.key.encode(), request.data)
-        if not authorized(AUTH_SIGN, expected):
-            print(expected)
+        if not authorized(AUTH_KEY, channel.key):
             return make_error('Unauthorized', 403)
 
         file, error = file_with_id(channel_id, file_id)
@@ -77,8 +73,7 @@ class ChannelFileEndpoint(Resource):
         if error:
             return error
 
-        expected = hmac_sha256(channel.key.encode(), request.data)
-        if not authorized(AUTH_SIGN, expected):
+        if not authorized(AUTH_KEY, channel.key):
             return make_error('Unauthorized', 403)
 
         file, error = file_with_id(channel_id, file_id)

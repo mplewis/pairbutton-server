@@ -3,7 +3,6 @@ from flask.ext.restful import reqparse
 
 
 AUTH_KEY = 'Auth-Key'
-AUTH_SIGN = 'Auth-Signature'
 
 
 def authorized(header_name, expected):
