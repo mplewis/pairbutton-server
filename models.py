@@ -1,4 +1,6 @@
-from app import db
+from flask.ext.sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 
 class Channel(db.Model):
