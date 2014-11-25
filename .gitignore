@@ -55,3 +55,4 @@ target/
 
 *.db
 *.sqlite
+config.py
