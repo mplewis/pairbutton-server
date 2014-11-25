@@ -1,3 +1,5 @@
+from errors import UnauthorizedError
+
 from flask import request
 from flask.ext.restful import reqparse
 
@@ -5,11 +7,11 @@ from flask.ext.restful import reqparse
 AUTH_KEY = 'Auth-Key'
 
 
-def authorized(header_name, expected):
+def check_auth(header_name, expected):
     if header_name in request.headers:
         if request.headers[header_name] == expected:
             return True
-    return False
+    raise UnauthorizedError('Invalid header: {}'.format(header_name))
 
 
 createFileParser = reqparse.RequestParser()

@@ -1,7 +1,7 @@
 from models import Channel, File
+from errors import NotFoundError
 
 from flask import jsonify
-from Crypto.Hash import HMAC, SHA256
 
 import random
 import hashlib
@@ -36,24 +36,17 @@ def make_error(message, code):
 def channel_with_id(channel_id):
     channel = Channel.query.filter_by(id=channel_id).first()
     if not channel:
-        error = make_error('No channel with id {}'.format(channel_id), 404)
-        return None, error
-    else:
-        return channel, None
+        raise NotFoundError('No channel with ID: {}'.format(channel_id))
+    return channel
 
 
 def file_with_id(channel_id, file_id):
-    channel = Channel.query.filter_by(id=channel_id).first()
-    if not channel:
-        error = make_error('No channel with id {}'.format(channel_id), 404)
-        return None, error
+    channel_with_id(channel_id)  # verify channel exists
     file = (File.query.filter_by(id=file_id)
             .filter_by(channel_id=channel_id).first())
     if not file:
-        error = make_error('No file with id {}'.format(file_id), 404)
-        return None, error
-    else:
-        return file, None
+        raise NotFoundError('No file with ID: {}'.format(file_id))
+    return file
 
 
 # http://stackoverflow.com/a/1960546/254187
