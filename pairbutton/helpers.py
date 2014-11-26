@@ -1,5 +1,5 @@
-from models import Channel, File
-from errors import NotFoundError
+from .models import Channel, File
+from .errors import NotFoundError
 
 from flask import jsonify
 

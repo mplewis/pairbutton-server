@@ -1,4 +1,4 @@
-from models import db, Channel, File
+from .models import db, Channel, File
 
 from flask import Flask
 from flask.ext.admin import Admin

@@ -1,4 +1,4 @@
-from errors import UnauthorizedError
+from .errors import UnauthorizedError
 
 from flask import request
 from flask.ext.restful import reqparse

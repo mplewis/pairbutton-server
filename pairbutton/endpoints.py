@@ -1,8 +1,8 @@
-from app import db
-from models import Channel, File
-from parsers import AUTH_KEY, check_auth, createFileParser, updateFileParser
-from helpers import (pretty_ident, crypto_key_hex, serialize_sqla,
-                     channel_with_id, file_with_id)
+from .app import db
+from .models import Channel, File
+from .parsers import AUTH_KEY, check_auth, createFileParser, updateFileParser
+from .helpers import (pretty_ident, crypto_key_hex, serialize_sqla,
+                      channel_with_id, file_with_id)
 
 from flask import jsonify
 from flask.ext.restful import Resource

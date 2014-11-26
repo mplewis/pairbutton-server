@@ -1,7 +1,7 @@
-from app import create_app
-from config import DevConfig, ProdConfig
-from endpoints import (ChannelsEndpoint, ChannelEndpoint, ChannelFilesEndpoint,
-                       ChannelFileEndpoint)
+from .app import create_app
+from .config import DevConfig, ProdConfig
+from .endpoints import (ChannelsEndpoint, ChannelEndpoint,
+                        ChannelFilesEndpoint, ChannelFileEndpoint)
 
 from flask import jsonify
 from flask.ext.restful import Api
