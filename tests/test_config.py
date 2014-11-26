@@ -12,5 +12,5 @@ def test_dev_config():
 
 def test_prod_config():
     app = create_app(ProdConfig)
-    app.debug.should.be.true
+    app.debug.should.be.false
     app.testing.should.be.false

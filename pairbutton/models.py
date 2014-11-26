@@ -7,7 +7,6 @@ class Channel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text, unique=True)
     key = db.Column(db.Text)
-    files = db.relationship('File', backref='channel')
 
     def __init__(self, name, key):
         self.name = name
@@ -21,13 +20,13 @@ class File(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text)
     data = db.Column(db.Text)
-    channel_id = db.Column(db.Integer, db.ForeignKey('channel.id'),
-                           nullable=False)
+    channel_id = db.Column(db.Integer, db.ForeignKey('channel.id'))
+    channel = db.relationship(Channel, backref='files')
 
-    def __init__(self, name, data, channel_id):
+    def __init__(self, name, data, channel):
         self.name = name
         self.data = data
-        self.channel_id = channel_id
+        self.channel = channel
 
     def __repr__(self):
         return ('<File: {}, {}, channel {}, {} ({} bytes)>'

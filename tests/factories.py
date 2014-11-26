@@ -1,18 +1,27 @@
-from factory import Factory
-from pairbutton.models import Channel, File
+from factory import Sequence, SubFactory
+from factory.alchemy import SQLAlchemyModelFactory
+from pairbutton.models import db, Channel, File
 
 
-class ChannelFactory(Factory):
+class BaseFactory(SQLAlchemyModelFactory):
+    class Meta:
+        abstract = True
+        sqlalchemy_session = db.session
+
+
+class ChannelFactory(BaseFactory):
     class Meta:
         model = Channel
 
-    name = 'mychannel'
-    key = 'mypkey'
+    name = Sequence(lambda n: 'mychannel{}'.format(n))
+    key = Sequence(lambda n: 'mykey{}'.format(n))
 
 
-class FileFactory(Factory):
+class FileFactory(BaseFactory):
     class Meta:
         model = File
 
-    name = 'myfile'
-    data = 'mydata'
+    name = Sequence(lambda n: 'myname{}'.format(n))
+    data = Sequence(lambda n: 'mydata{}'.format(n))
+    channel = SubFactory(ChannelFactory)
+

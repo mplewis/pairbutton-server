@@ -27,6 +27,7 @@ def testapp(app):
 @pytest.yield_fixture(scope='function')
 def db(app):
     _db.app = app
+    _db.create_all()
 
     yield _db
 
@@ -35,16 +36,13 @@ def db(app):
 
 @pytest.fixture
 def channel(db):
-    channel = ChannelFactory()
+    c = ChannelFactory()
     db.session.commit()
-    return channel
+    return c
 
 
 @pytest.fixture
-def file(db, channel=None):
-    file = FileFactory()
-    if not channel:
-        channel = channel(db)
-    file.channel_id = channel.id
+def file(db):
+    f = FileFactory()
     db.session.commit()
-    return file
+    return f
