@@ -10,10 +10,11 @@ from flask.ext.restful import Resource
 
 class ChannelsEndpoint(Resource):
     def post(self):
-        existing_channel = True
-        while existing_channel:
+        while True:
             new_name = pretty_ident(8)
-            existing_channel = Channel.query.filter_by(name=new_name).first()
+            existing = Channel.query.filter_by(name=new_name).first()
+            if not existing:
+                break
         channel = Channel(new_name, crypto_key_hex())
         db.session.add(channel)
         db.session.commit()

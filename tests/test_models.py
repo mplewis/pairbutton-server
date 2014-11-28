@@ -1,6 +1,7 @@
 from pairbutton.helpers import channel_with_id, file_with_id
 
 import pytest
+import sure  # NOQA
 
 
 @pytest.mark.usefixtures('db')

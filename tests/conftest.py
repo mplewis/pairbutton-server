@@ -1,11 +1,11 @@
-import pytest
-from webtest import TestApp
-
 from pairbutton.config import TestConfig
 from pairbutton.app import create_app
 from pairbutton.models import db as _db
 
 from .factories import ChannelFactory, FileFactory
+
+import pytest
+from flask.ext.webtest import TestApp
 
 
 @pytest.yield_fixture(scope='function')
