@@ -35,6 +35,13 @@ class ChannelEndpoint(Resource):
         del channel_info['key']
         return jsonify(channel_info)
 
+    def delete(self, channel_id):
+        channel = channel_with_id(channel_id)
+        check_auth(AUTH_KEY, channel.key)
+        db.session.delete(channel)
+        db.session.commit()
+        return '', 204
+
 
 class ChannelFilesEndpoint(Resource):
     def get(self, channel_id):

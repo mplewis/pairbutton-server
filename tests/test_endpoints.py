@@ -21,7 +21,7 @@ class TestEndpointsWithoutAuth:
         def test_create_channel(self, testapp, db):
             testapp.post('/channel')
             channels = db.session.query(Channel).all()
-            len(channels).should.equal(1)
+            channels.should.have.length_of(1)
 
     @pytest.mark.usefixtures('db')
     class TestReadChannel:
@@ -50,7 +50,13 @@ class TestEndpointsWithoutAuth:
 class TestEndpointsWithAuth:
     @pytest.mark.usefixtures('db')
     class TestDeleteChannel:
-        pass
+        def test_delete_channel(self, testapp, db, channel):
+            channels = db.session.query(Channel).all()
+            channels.should.have.length_of(1)
+            headers = {'Auth-Key': channel.key}
+            testapp.delete('/channel/{}'.format(channel.id), headers=headers)
+            channels = db.session.query(Channel).all()
+            channels.should.have.length_of(0)
 
     @pytest.mark.usefixtures('db')
     class TestCreateFile:
