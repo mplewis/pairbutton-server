@@ -53,7 +53,7 @@ class ChannelFilesEndpoint(Resource):
         channel = channel_with_id(channel_id)
         check_auth(AUTH_KEY, channel.key)
         file_data = createFileParser.parse_args()
-        file_data['channel_id'] = int(channel.id)
+        file_data['channel'] = channel
         f = File(**file_data)
         db.session.add(f)
         db.session.commit()

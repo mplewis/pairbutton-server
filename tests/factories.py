@@ -2,6 +2,11 @@ from factory import Sequence, SubFactory
 from factory.alchemy import SQLAlchemyModelFactory
 from pairbutton.models import db, Channel, File
 
+from faker import Faker
+
+
+fake = Faker()
+
 
 class BaseFactory(SQLAlchemyModelFactory):
     class Meta:
@@ -24,3 +29,8 @@ class FileFactory(BaseFactory):
     name = Sequence(lambda n: 'myname{}'.format(n))
     data = Sequence(lambda n: 'mydata{}'.format(n))
     channel = SubFactory(ChannelFactory)
+
+
+def fake_file():
+    return {'name': '{}.txt'.format(fake.word()),
+            'data': fake.text(max_nb_chars=200)}

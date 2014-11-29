@@ -1,4 +1,4 @@
-from .factories import ChannelFactory
+from .factories import ChannelFactory, fake_file
 
 from pairbutton.models import Channel
 
@@ -60,7 +60,12 @@ class TestEndpointsWithAuth:
 
     @pytest.mark.usefixtures('db')
     class TestCreateFile:
-        pass
+        def test_create_file(self, testapp, db, channel):
+            channel.files.should.have.length_of(0)
+            headers = {'Auth-Key': channel.key}
+            testapp.post_json('/channel/{}/file'.format(channel.id),
+                              fake_file(), headers=headers)
+            channel.files.should.have.length_of(1)
 
     @pytest.mark.usefixtures('db')
     class TestUpdateFile:
