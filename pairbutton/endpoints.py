@@ -9,6 +9,10 @@ from flask.ext.restful import Resource
 
 
 class ChannelsEndpoint(Resource):
+    def get(self):
+        channels = db.session.query(Channel)
+        return jsonify_unsafe([serialize_sqla(c) for c in channels])
+
     def post(self):
         while True:
             new_name = pretty_ident(8)

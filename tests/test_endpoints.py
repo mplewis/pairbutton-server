@@ -1,3 +1,5 @@
+from .factories import ChannelFactory
+
 from pairbutton.models import Channel
 
 import pytest
@@ -7,7 +9,11 @@ import sure  # NOQA
 class TestEndpointsWithoutAuth:
     @pytest.mark.usefixtures('db')
     class TestReadChannels:
-        pass
+        def test_read_channels(self, testapp, db):
+            ChannelFactory()  # Create two channels
+            ChannelFactory()
+            resp = testapp.get('/channel')
+            resp.json.should.have.length_of(2)
 
     @pytest.mark.usefixtures('db')
     class TestCreateChannel:

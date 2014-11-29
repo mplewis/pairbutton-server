@@ -24,4 +24,3 @@ class FileFactory(BaseFactory):
     name = Sequence(lambda n: 'myname{}'.format(n))
     data = Sequence(lambda n: 'mydata{}'.format(n))
     channel = SubFactory(ChannelFactory)
-
