@@ -1,11 +1,15 @@
 from .models import Channel, File
-from .errors import NotFoundError
+from .errors import NotFoundError, PatchError
 
 from flask import jsonify, Response
+from diff_match_patch import diff_match_patch
 
 import random
 import hashlib
 import json
+
+
+dmp = diff_match_patch()
 
 
 def pretty_ident(length, starts_with_consonant=True):
@@ -62,3 +66,24 @@ def jsonify_unsafe(array):
     json_str = json.dumps(array)
     resp = Response(json_str, mimetype='application/json')
     return resp
+
+
+def diff(old_data, new_data):
+    patches = dmp.patch_make(old_data, new_data)
+    return dmp.patch_toText(patches)
+
+
+def apply_diff(old_data, delta):
+    patches = dmp.patch_fromText(delta)
+    new_data, success = dmp.patch_apply(patches, old_data)
+    if not all(success):
+        success_count = len([x for x in success if x])
+        raise PatchError('Patching failed: {}/{} successes'
+                         .format(success_count, len(success)))
+    return new_data
+
+
+def md5(data):
+    m = hashlib.md5()
+    m.update(data.encode())
+    return m.hexdigest()

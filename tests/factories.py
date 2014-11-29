@@ -1,4 +1,4 @@
-from factory import Sequence, SubFactory
+from factory import Sequence, SubFactory, LazyAttribute
 from factory.alchemy import SQLAlchemyModelFactory
 from pairbutton.models import db, Channel, File
 
@@ -26,11 +26,22 @@ class FileFactory(BaseFactory):
     class Meta:
         model = File
 
-    name = Sequence(lambda n: 'myname{}'.format(n))
-    data = Sequence(lambda n: 'mydata{}'.format(n))
+    name = LazyAttribute(lambda x: fake_filename())
+    data = LazyAttribute(lambda x: fake_data())
     channel = SubFactory(ChannelFactory)
 
 
+def fake_filename():
+    return '{}.txt'.format(fake.word())
+
+
+def fake_data():
+    return '\n'.join(fake.paragraphs(nb=3))
+
+
 def fake_file():
-    return {'name': '{}.txt'.format(fake.word()),
-            'data': fake.text(max_nb_chars=200)}
+    return {'name': fake_filename(), 'data': fake_data()}
+
+
+def fake_md5():
+    return fake.md5()

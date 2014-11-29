@@ -1,6 +1,7 @@
-from .factories import ChannelFactory, fake_file
+from .factories import ChannelFactory, fake_data, fake_file, fake_md5
 
 from pairbutton.models import Channel
+from pairbutton.helpers import diff, md5
 
 import pytest
 import sure  # NOQA
@@ -69,7 +70,42 @@ class TestEndpointsWithAuth:
 
     @pytest.mark.usefixtures('db')
     class TestUpdateFile:
-        pass
+        def test_update_file(self, testapp, file):
+            old_data = file.data
+            new_data = fake_data()
+            data_diff = diff(old_data, new_data)
+            expected_hash = md5(new_data)
+            headers = {'Auth-Key': file.channel.key}
+            diff_data = {'file_delta': data_diff,
+                         'expected_hash': expected_hash}
+            testapp.put_json('/channel/{}/file/{}'
+                             .format(file.channel.id, file.id),
+                             diff_data, headers=headers)
+            file.data.should.equal(new_data)
+
+        def test_update_file_bad_md5(self, testapp, file):
+            old_data = file.data
+            new_data = fake_data()
+            data_diff = diff(old_data, new_data)
+            headers = {'Auth-Key': file.channel.key}
+            diff_data = {'file_delta': data_diff,
+                         'expected_hash': fake_md5()}
+            testapp.put_json('/channel/{}/file/{}'
+                             .format(file.channel.id, file.id),
+                             diff_data, headers=headers,
+                             status=409)
+
+        def test_update_file_bad_delta(self, testapp, file):
+            new_data = fake_data()
+            data_diff = diff(fake_data(), new_data)
+            expected_hash = md5(new_data)
+            headers = {'Auth-Key': file.channel.key}
+            diff_data = {'file_delta': data_diff,
+                         'expected_hash': expected_hash}
+            testapp.put_json('/channel/{}/file/{}'
+                             .format(file.channel.id, file.id),
+                             diff_data, headers=headers,
+                             status=409)
 
     @pytest.mark.usefixtures('db')
     class TestDeleteFile:
