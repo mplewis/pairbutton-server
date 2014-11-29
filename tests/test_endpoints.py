@@ -9,7 +9,7 @@ import sure  # NOQA
 class TestEndpointsWithoutAuth:
     @pytest.mark.usefixtures('db')
     class TestReadChannels:
-        def test_read_channels(self, testapp, db):
+        def test_read_channels(self, testapp):
             ChannelFactory()  # Create two channels
             ChannelFactory()
             resp = testapp.get('/channel')
@@ -60,7 +60,7 @@ class TestEndpointsWithAuth:
 
     @pytest.mark.usefixtures('db')
     class TestCreateFile:
-        def test_create_file(self, testapp, db, channel):
+        def test_create_file(self, testapp, channel):
             channel.files.should.have.length_of(0)
             headers = {'Auth-Key': channel.key}
             testapp.post_json('/channel/{}/file'.format(channel.id),
@@ -73,4 +73,10 @@ class TestEndpointsWithAuth:
 
     @pytest.mark.usefixtures('db')
     class TestDeleteFile:
-        pass
+        def test_delete_file(self, testapp, file):
+            file.channel.files.should.have.length_of(1)
+            headers = {'Auth-Key': file.channel.key}
+            testapp.delete_json('/channel/{}/file/{}'
+                                .format(file.channel.id, file.id),
+                                fake_file(), headers=headers)
+            file.channel.files.should.have.length_of(0)
