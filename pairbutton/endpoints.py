@@ -11,7 +11,10 @@ from flask.ext.restful import Resource
 class ChannelsEndpoint(Resource):
     def get(self):
         channels = db.session.query(Channel)
-        return jsonify_unsafe([serialize_sqla(c) for c in channels])
+        channel_dicts = [serialize_sqla(c) for c in channels]
+        for channel_dict in channel_dicts:
+            del channel_dict['key']
+        return jsonify_unsafe(channel_dicts)
 
     def post(self):
         while True:

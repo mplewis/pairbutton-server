@@ -14,6 +14,7 @@ class TestEndpointsWithoutAuth:
             ChannelFactory()
             resp = testapp.get('/channel')
             resp.json.should.have.length_of(2)
+            resp.json[0].should_not.have.key('key')
 
     @pytest.mark.usefixtures('db')
     class TestCreateChannel:
