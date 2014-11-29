@@ -29,6 +29,9 @@ class File(db.Model):
         self.channel = channel
 
     def __repr__(self):
+        some_data = self.data[:40]
+        if len(self.data) > 40:
+            some_data += '...'
         return ('<File: {}, {}, channel {}, {} ({} bytes)>'
                 .format(self.id, self.name, self.channel.id,
-                        self.data, len(self.data)))
+                        some_data, len(self.data)))
