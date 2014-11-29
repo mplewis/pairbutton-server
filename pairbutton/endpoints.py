@@ -2,7 +2,7 @@ from .app import db
 from .models import Channel, File
 from .parsers import AUTH_KEY, check_auth, createFileParser, updateFileParser
 from .helpers import (pretty_ident, crypto_key_hex, serialize_sqla,
-                      channel_with_id, file_with_id)
+                      channel_with_id, file_with_id, jsonify_unsafe)
 
 from flask import jsonify
 from flask.ext.restful import Resource
@@ -24,15 +24,16 @@ class ChannelsEndpoint(Resource):
 class ChannelEndpoint(Resource):
     def get(self, channel_id):
         channel = channel_with_id(channel_id)
-        check_auth(AUTH_KEY, channel.key)
-        return jsonify(serialize_sqla(channel))
+        channel_info = serialize_sqla(channel)
+        del channel_info['key']
+        return jsonify(channel_info)
 
 
 class ChannelFilesEndpoint(Resource):
     def get(self, channel_id):
         channel = channel_with_id(channel_id)
         files = channel.files
-        return jsonify(items=[serialize_sqla(f) for f in files])
+        return jsonify_unsafe([serialize_sqla(f) for f in files])
 
     def post(self, channel_id):
         channel = channel_with_id(channel_id)
@@ -46,6 +47,10 @@ class ChannelFilesEndpoint(Resource):
 
 
 class ChannelFileEndpoint(Resource):
+    def get(self, channel_id, file_id):
+        file = file_with_id(channel_id, file_id)
+        return jsonify(serialize_sqla(file))
+
     def put(self, channel_id, file_id):
         channel = channel_with_id(channel_id)
         check_auth(AUTH_KEY, channel.key)

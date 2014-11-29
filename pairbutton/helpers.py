@@ -1,10 +1,11 @@
 from .models import Channel, File
 from .errors import NotFoundError
 
-from flask import jsonify
+from flask import jsonify, Response
 
 import random
 import hashlib
+import json
 
 
 def pretty_ident(length, starts_with_consonant=True):
@@ -55,3 +56,9 @@ def serialize_sqla(sqla):
     for column in sqla.__table__.columns:
         d[column.name] = str(getattr(sqla, column.name))
     return d
+
+
+def jsonify_unsafe(array):
+    json_str = json.dumps(array)
+    resp = Response(json_str, mimetype='application/json')
+    return resp
