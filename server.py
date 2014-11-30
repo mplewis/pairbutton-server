@@ -1,9 +1,7 @@
-from .app import create_app
-from .config import DevConfig, ProdConfig
+from pairbutton.app import create_app
+from pairbutton.config import DevConfig, ProdConfig
 
 import argparse
-
-
 
 
 parser = argparse.ArgumentParser(description='Start the Pairbutton server.')
