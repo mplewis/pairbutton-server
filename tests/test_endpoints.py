@@ -64,9 +64,10 @@ class TestEndpointsWithAuth:
         def test_create_file(self, testapp, channel):
             channel.files.should.have.length_of(0)
             headers = {'Auth-Key': channel.key}
-            testapp.post_json('/channel/{}/file'.format(channel.id),
-                              fake_file(), headers=headers)
+            resp = testapp.post_json('/channel/{}/file'.format(channel.id),
+                                     fake_file(), headers=headers)
             channel.files.should.have.length_of(1)
+            resp.json.should_not.have.key('data')
 
     @pytest.mark.usefixtures('db')
     class TestUpdateFile:

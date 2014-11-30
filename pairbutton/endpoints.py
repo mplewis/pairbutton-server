@@ -59,7 +59,9 @@ class ChannelFilesEndpoint(Resource):
         f = File(**file_data)
         db.session.add(f)
         db.session.commit()
-        return jsonify(serialize_sqla(f))
+        data_dict = serialize_sqla(f)
+        del data_dict['data']
+        return jsonify(data_dict)
 
 
 class ChannelFileEndpoint(Resource):
