@@ -83,6 +83,7 @@ class ChannelFileEndpoint(Resource):
             raise PatchError('Couldn\'t apply patch: expected {}, got {}'
                              .format(expected, actual))
         file.data = new_data
+        db.session.commit()
         return '', 204
 
     def delete(self, channel_id, file_id):
